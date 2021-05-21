@@ -149,7 +149,7 @@ class missile(saw):
 
     def collide(self, rect):
         if rect[0] + rect[2] > self.hitbox[0] and rect[0] < self.hitbox[0] + self.hitbox[2]:
-            if rect[1] < self.hitbox[3]:
+            if rect[1] + rect[3] > self.hitbox[1]:
                 return True
         return False
 
@@ -235,6 +235,7 @@ while run:
 
     for obstacle in obstacles:
         if obstacle.collide(runner.hitbox):
+
             runner.falling = True
 
             if pause == 0:
