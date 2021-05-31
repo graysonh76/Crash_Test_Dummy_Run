@@ -8,7 +8,7 @@ from pygame import mixer
 
 mixer.init()
 mixer.music.load('media/Bensound Jazzy Frenchy.mp3')
-#mixer.music.play(-1)
+mixer.music.play(-1)
 
 pygame.init()
 
@@ -139,17 +139,17 @@ class spike(saw):
 
 class missile(saw):
     fly = pygame.image.load(os.path.join('images', 'Missile.png'))
-    fly = pygame.transform.scale(fly, (48, 100))
+    fly = pygame.transform.scale(fly, (48, 64))
     fly = pygame.transform.rotate(fly, 90)
 
     def draw(self, win):
-        self.hitbox = (self.x, self.y + 10, 100, 28)
+        self.hitbox = (self.x, self.y + 10, 64, 28)
         pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
         win.blit(self.fly, (self.x, self.y))
 
     def collide(self, rect):
         if rect[0] + rect[2] > self.hitbox[0] and rect[0] < self.hitbox[0] + self.hitbox[2]:
-            if rect[1] + rect[3] > self.hitbox[1]:
+            if rect[1] + rect[3] > self.hitbox[1] and not rect[1] < self.hitbox[3]:
                 return True
         return False
 
@@ -187,7 +187,7 @@ def endScreen():
                 run = False
                 runner.falling = False
                 runner.sliding = False
-                runner.jumpin = False
+                runner.jumping = False
 
         win.blit(bg, (0, 0))
         largeFont = pygame.font.SysFont('timesnewroman', 80)
@@ -235,7 +235,6 @@ while run:
 
     for obstacle in obstacles:
         if obstacle.collide(runner.hitbox):
-
             runner.falling = True
 
             if pause == 0:
@@ -276,6 +275,8 @@ while run:
 
         if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
             if not runner.jumping:
+                sound1 = mixer.Sound('media/Mario Jump.mp3')
+                sound1.play()
                 runner.jumping = True
 
         if keys[pygame.K_DOWN]:
